@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head'); %>
+        <div class="second-nav">
+            <div class="nav2">
+                <h5> Events <span style="font-weight: 600;">></span> <span><a href="/scan">Scanner</a></span></h5>
+                <h1>Event Scanner</h1>
+    
+            </div>
+    
+        </div>
+    </head>
+<body>
+    <header>
+        <%- include('../partials/header'); %>
+    </header>
+    <main class="my-5 cont">
+        <div class="scan">
+            <div id="reader"></div><br/>
+            <div id="note"></div> 
+        </div>
+        <div id="result" name="result"></div>
+    </main>
+
+    <style>
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+        }
+
+        #reader {
+            width: 600px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 5%;
+        }
+
+        #result {
+            text-align: center;
+            font-size: 1.5rem;
+        }
+    </style>
+
+    <script src="node_modules/html5-qrcode/html5-qrcode.min.js"></script>
+
+    <script>
+        const scanner = new Html5QrcodeScanner('reader', {
+            qrbox: {
+                width: 250,
+                height: 250,
+            },
+            fps: 20,
+        });
+
+        scanner.render(success, error);
+
+        function success(result) {
+            const scannedData = result.replace(/"/g, ''); // Use the scanned data directly
+            document.getElementById('result').innerHTML = `
+            <h2>Success!</h2>
+            <p><a href="${scannedData}">${scannedData}</a></p>
+            `;
+            sendDataToServer(scannedData);
+            scanner.clear();
+            document.getElementById('reader').remove();
+            document.getElementById('note').remove();
+        }
+
+        function error(error) {
+            document.getElementById('note').innerHTML = "Please show your QR code"
+        }
+
+        function sendDataToServer(scannedData) {
+            alert("User registered successfully")
+            fetch('/scan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ scannedData }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        }
+    </script>
+    <%- include('../partials/footer'); %>
+</body>
+</html>

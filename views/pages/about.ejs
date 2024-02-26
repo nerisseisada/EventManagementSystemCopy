@@ -1,0 +1,684 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head') %>
+
+    </head>
+    <body >
+        <div class="second-nav">
+            <div class="nav2">
+                <h5> Events <span style="font-weight: 600;">></span> <span><a href="/about">Registrant Details</a></span></h5>
+                <div style="display: flex">
+                    <div class="me-auto">
+                        <h1>Registrant Details </h1>
+                    </div>
+                    <div class="nav2-import mt-2">
+                        <a href="/import-registrant" class="mid-screen"><i class="fa fa-plus me-2" aria-hidden="true"  style="font-size: 15px;"></i>Import Registrant</a>
+                        <a href="/import-registrant" class="small-screen"><i class="fa fa-plus me-2" aria-hidden="true"  style="font-size: 15px;"></i>Import</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <header><%- include('../partials/header'); %></header>
+
+        <main class="container registrationlist">
+                <div class="cont">
+                    <div class="d-flex align-items-center about-sec mb-3" style="height: 60px; margin-top: -2%;">
+                        <div class="me-auto">
+                            <form id="search-form" action="/search" method="GET">
+                                <input type="text" name="search" id="search" placeholder="Search by Name, Status, ...">
+                                <button type="submit" id="search-btn"> <i class="fa fa-search search-color"></i></button>  
+                            </form>
+                        </div>
+                        <div class="mt-2 me-2 fil">
+                            <h5 ><a href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">
+                                <i class='fas fa-filter me-2' style="font-size: 15px;"></i>Filter
+                            </a></h5>
+                        </div>
+                        <div class="mt-2 ex">
+                            <h5><a href="#" id="exportButton">
+                                <i class="fa fa-download" aria-hidden="true"  style="font-size: 15px;"></i> Export (.csv)
+                            </a></h5>
+                        </div>
+                        <div class="about-btn btn-group">
+                            <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                More
+                            </button>
+                            <ul class="d dropdown-menu">
+                              <li><a href="#" class="dropdown-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">Filter</a></li>
+                              <li><a href="#" class="dropdown-item" id="exportButton">Export (.csv)</a></li>
+                              
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3" id="about-container">
+                        <div class="d-flex bd-highlight vertical-center">
+                            <div class="me-auto p-2 bd-highlight">
+                                <h2 style="font-weight: normal;">Registrant Details</h2>
+                            </div>
+                            
+                              
+                        </div>
+                        <% if (deleteMessage && deleteMessage.length > 0) { %>
+                            <div class="alert alert-primary alert-dismissible fade show">
+                              <%= deleteMessage %>
+                              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        <% } %>
+                        
+                        <% if (updatemessage && updatemessage.length > 0) { %>
+                        <div class="alert alert-primary alert-dismissible fade show">
+                            <%= updatemessage %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <% } %>
+
+                          <%if (skippedRows && skippedRows.length > 0) { %>
+                            <div class="alert alert-warning alert-dismissible fade show">
+                            Skipping Rows: (<%= skippedRows%>). Please check if the data you are trying to import are null values for the following:
+                            <li>First Name</li>
+                            <li>Last name</li>
+                            <li>Email</li>
+                            <li>Registration Type</li>
+                            <li>Registration Status</li>
+                            <li>Date of Registration</li>
+                              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                          <% } %>
+
+                          <%if (skippedEmails && skippedEmails.length > 0 ) { %>
+                            <div class="alert alert-warning alert-dismissible fade show">
+                            Skipping emails : (<%= skippedEmails%>). Please check if the data you are trying to import are duplicate or existing emails.
+                              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                          <% } %>
+                        <div class=" table-wrapper">
+                            <table class="table table-hover" id="tableregistrant">
+                                
+                                          
+                            <thead>
+                                <tr>
+                                    <th class="col-1"> #
+                                        <a onclick="sortTableAlphabetically(0)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1"> Registration ID
+                                        <a onclick="sortTableAlphabetically(1)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">First Name 
+                                        <a onclick="sortTableAlphabetically(2)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Last Name 
+                                        <a onclick="sortTableAlphabetically(3)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Email
+                                        <a onclick="sortTableAlphabetically(4)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Home
+                                        <a onclick="sortTableAlphabetically(5)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Mobile No.
+                                        <a onclick="sortTableAlphabetically(6)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Tel No.
+                                        <a onclick="sortTableAlphabetically(7)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Company
+                                        <a onclick="sortTableAlphabetically(8)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Company Address
+                                        <a onclick="sortTableAlphabetically(9)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Work Mobile No.
+                                        <a onclick="sortTableAlphabetically(10)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Work Tel No.
+                                        <a onclick="sortTableAlphabetically(11)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Website
+                                        <a onclick="sortTableAlphabetically(12)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Registration Type
+                                        <a onclick="sortTableAlphabetically(13)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Participant Status
+                                        <a onclick="sortTableAlphabetically(14)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Date of Participant
+                                        <a onclick="sortTableByDate(15)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Registration Status
+                                        <a onclick="sortTableAlphabetically(16)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Date of Registration
+                                        <a onclick="sortTableByDate(17)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Action</th>
+                                </tr>
+                            </thead>
+                          
+                            <tbody id="tableBody">
+                                <% data.forEach(function(data, index) { %>
+                                    <tr>
+                                        <td><%=index + 1 %></td>
+                                        <td><%= data._id %></td>
+                                        <td><%= data.firstName %></td>
+                                        <td><%= data.lastName %></td>
+                                        <td><%= data.email %></td>
+                                        <td><%= data.home %></td>
+                                        <td><%= data.mobile %></td>
+                                        <td><%= data.tel %></td>
+                                        <td><%= data.company %></td>
+                                        <td><%= data.companyAddress %></td>
+                                        <td><%= data.workMobileNumber %></td>
+                                        <td><%= data.workTelephoneNumber %></td>
+                                        <td><%= data.website %></td>
+                                        <td><%= data.type %></td>
+                                        <td><%= data.status %></td>
+                                        <td><%= data.statusUpdatedAt %></td>
+                                        <td><%= data.registrationStatus%></td>
+                                        <td><%= data.registrationDate %></td>
+                                        <td class="">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <button
+                                                    style="color: grey; background-color: transparent; border: none;"
+                                                    class="edit-button"
+                                                    data-id="<%= data._id %>"
+                                                    data-firstName="<%= data.firstName %>"
+                                                    data-lastName="<%= data.lastName %>"
+                                                    data-company="<%= data.company %>"
+                                                    data-type="<%= data.type %>"
+                                                    data-status="<%= data.status %>"
+                                                    >
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="col">
+                                                    <form
+                                                    method="POST"
+                                                    action="/delete/<%= data._id %>"
+                                                    onsubmit="return confirm('Are you sure you want to delete this item?');"
+                                                    >
+                                                        <button
+                                                            type="submit"
+                                                            style="color: red; background-color: transparent; border: none;"
+                                                        >
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            
+                                        </td>
+                                    </tr>
+
+                                    <div id="editModal-<%= data._id %>" class="modal editdata">
+                                        <div class="modal-content">
+                                            <span class="close" id="closeModal-<%= data._id %>">&times;</span>
+                                            <form id="editForm-<%= data._id %>" action="/scan/<%= data._id %>" method="POST">
+                                                <input type="hidden" id="editId-<%= data._id %>" name="id" value="<%= data._id %>">
+                                                <div class="mb-3">
+                                                    <label for="editFirstName-<%= data._id %>">First Name</label>
+                                                    <input type="text" class="form-control" id="editFirstName-<%= data._id %>" name="firstName" value="<%= data.firstName %>">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="editLastName-<%= data._id %>">Last Name</label>
+                                                    <input type="text" class="form-control" id="editLastName-<%= data._id %>" name="lastName" value="<%= data.lastName %>">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="editCompany-<%= data._id %>">Company</label>
+                                                    <input type="text" class="form-control" id="editCompany-<%= data._id %>" name="company" value="<%= data.company %>">
+                                                </div>
+                                                <label for="editType-<%= data._id %>" class="form-label">Registration Type</label>
+                                                <select class="form-select" aria-label="Default select example" id="editType-<%= data._id %>" name="type">
+                                                    <option value="invitee" <%= data.type === 'invitee' ? 'selected' : '' %>>invitee</option>
+                                                    <option value="vip" <%= data.type === 'vip' ? 'selected' : '' %>>vip</option>
+                                                    <option value="media" <%= data.type === 'media' ? 'selected' : '' %>>media</option>
+                                                </select>
+                                                <label for="editStatus-<%= data._id %>" class="form-label mt-3">Participant Status</label>
+                                                <select class="form-select" aria-label="Default select example" id="editStatus-<%= data._id %>" name="status">
+                                                    <option value="Registrant" <%= data.status === 'Registrant' ? 'selected' : '' %>>Registrant</option>
+                                                    <option value="Participant" <%= data.status === 'Participant' ? 'selected' : '' %>>Participant</option>
+                                                </select>
+                                                <label for="editRegistrationStatus-<%= data._id %>" class="form-label mt-3">Registration Status</label>
+                                                <select class="form-select" aria-label="Default select example" id="editRegistrationStatus-<%= data._id %>" name="registrationStatus">
+                                                    <option value="Pending" <%= data.registrationStatus === 'Pending' ? 'selected' : '' %>>Pending</option>
+                                                    <option value="Confirmed" <%= data.registrationStatus === 'Confirmed' ? 'selected' : '' %>>Confirmed</option>
+                                                    <option value="Denied" <%= data.registrationStatus === 'Denied' ? 'selected' : '' %>>Denied</option>
+                                                </select>
+                                                <button type="submit" class="btn btn-secondary mt-4">Save</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                <% }); %>           
+                                
+                            </tbody>
+                            
+                            </table>
+                        </div>
+                            
+                        <div class="mt-3 text-center" id="rowCount">
+                            <span id="rowCountNumber"></span> registrants
+                        </div>
+                    </div> <!--- end about-container-->
+                </div> <!--- end cont -->
+                
+                
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                <div class="offcanvas-header d-flex bd-highlight vertical-center">
+                    <div class="me-auto bd-highlight">
+                        <h3 id="offcanvasRightLabel" >Filter Data</h3>
+                    </div>
+                    <div class="p-2 bd-highlight">
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="offcanvas-body">
+                    <div >
+                        <h4 style="margin-bottom: 3%;">Contact Information</h4>
+                        <div class="form-group">
+                            <label for="f_name">First Name</label>
+                            <input type="text" class="form-control" id="f_name" placeholder="Search Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="l_name">Last Name</label>
+                            <input type="text" class="form-control" id="l_name" placeholder="Search Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" class="form-control" id="email" placeholder="Search Email">
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Company</label>
+                            <input type="text" class="form-control" id="company" placeholder="Search Company">
+                        </div>
+                        
+                        <h4 style="margin-bottom: 3%; margin-top: 3%;">Registrant Details</h4>
+
+                        <div class="about-section">
+                            <h6>Type</h6>
+                            <div class="form-check">
+                                <input type="checkbox" id="inviteeCheckbox" onclick="filterTable()">
+                                <label class="form-check-label" for="inviteeCheckbox">
+                                  Invitee
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="vipCheckbox" onclick="filterTable()">
+                                <label class="form-check-label" for="vipCheckbox">
+                                  VIP
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="mediaCheckbox" onclick="filterTable()">
+                                <label class="form-check-label" for="mediaCheckbox">
+                                  Media
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="about-section">
+                            <h6>Participant Status</h6>
+                            <div class="form-check">
+                                <input type="checkbox" id="participantCheckbox" onclick="filterTable()">
+                                <label class="form-check-label" for="participantCheckbox">
+                                  Participant
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="registrantCheckbox" onclick="filterTable()">
+                                <label class="form-check-label" for="registrantCheckbox">
+                                  Registrant
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="about-section">
+                            <h6>Registration Status</h6>
+                            <div class="form-check">
+                                <input type="checkbox" id="pendingCheckbox" onclick="filterTable()">
+                                <label class="form-check-label" for="pendingCheckbox">
+                                  Pending
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="confirmedCheckbox" onclick="filterTable()">
+                                <label class="form-check-label" for="confirmedCheckbox">
+                                  Confirmed
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="deniedCheckbox" onclick="filterTable()">
+                                <label class="form-check-label" for="deniedCheckbox">
+                                  Denied
+                                </label>
+                            </div>
+                        </div>
+                        <div class="about-section">
+                            <h6>Date of Registration</h6>
+                            <div class="form-row"> <!-- Add form-row class here -->
+                              <div class="form-group col-md-6">
+                                <label>From</label>
+                                <input type="text" class="form-control" id="startDatePicker" placeholder="Select start date">
+                              </div>
+                              <div class="form-group col-md-6">
+                                <label>To</label>
+                                <input type="text" class="form-control" id="endDatePicker" placeholder="Select end date">
+                              </div>
+                            </div>
+                        </div>
+                
+                    <button class="btn btn-primary " onclick="submitFilter()" data-bs-dismiss="offcanvas"  style="border: 2px solid #0dcaf0">Submit</button>
+                </div>
+            </div>
+        </main>
+        <script>
+            
+            // ------------------------- filter -----------------------------
+
+            var submitClicked = false;
+
+            // Date picker initialization
+            const startDatePicker = flatpickr("#startDatePicker", {
+                dateFormat: "Y-m-d H:i:S",
+                defaultDate: null,
+            });
+
+            const endDatePicker = flatpickr("#endDatePicker", {
+                dateFormat: "Y-m-d H:i:S",
+                defaultDate: null,
+            });
+
+            function submitFilter() {
+                submitClicked = true;
+                filterTable();
+            }
+
+            //checkbox filter
+            function toggleCombinedDropdown() {
+                var combinedDropdown = document.getElementById("combinedFilterDropdown");
+                if (combinedDropdown.style.display === "none") {
+                    combinedDropdown.style.display = "block";
+                    document.getElementById("search").disabled = true
+                    document.getElementById("search-btn").disabled = true
+                } else {
+                    combinedDropdown.style.display = "none";
+                    document.getElementById("search").disabled = false
+                    document.getElementById("search-btn").disabled = true
+                }
+            }
+            function filterTable() {
+                if (!submitClicked) {
+                    return;
+                }
+
+                const startDate = startDatePicker.selectedDates.length > 0 ? startDatePicker.selectedDates[0] : null;
+                let endDate = endDatePicker.selectedDates.length > 0 ? endDatePicker.selectedDates[0] : null;
+
+                if (endDate !== null) {
+                    endDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59, 999);
+                }
+
+                var typeCheckboxes = {
+                    "inviteeCheckbox": document.getElementById("inviteeCheckbox"),
+                    "vipCheckbox": document.getElementById("vipCheckbox"),
+                    "mediaCheckbox": document.getElementById("mediaCheckbox")
+                };
+
+                var statusCheckboxes = {
+                    "participantCheckbox": document.getElementById("participantCheckbox"),
+                    "registrantCheckbox": document.getElementById("registrantCheckbox")
+                };
+
+                var regCheckboxes = {
+                    "pendingCheckbox": document.getElementById("pendingCheckbox"),
+                    "confirmedCheckbox": document.getElementById("confirmedCheckbox"),
+                    "deniedCheckbox": document.getElementById("deniedCheckbox")
+                };
+
+                var firstNameElement = document.getElementById("f_name");
+                var firstName = firstNameElement ? firstNameElement.value.trim().toLowerCase() : '';
+
+                var lastNameElement = document.getElementById("l_name");
+                var lastName = lastNameElement ? lastNameElement.value.trim().toLowerCase() : '';
+
+                var companyElement = document.getElementById("company");
+                var company = companyElement ? companyElement.value.trim().toLowerCase() : '';
+
+                var emailElement = document.getElementById("email");
+                var email = emailElement ? emailElement.value.trim().toLowerCase() : '';
+
+                var visibleRowCount = 0;
+                var table = document.getElementById("tableBody");
+                var rows = table.getElementsByTagName("tr");
+
+                for (var i = 0; i < rows.length; i++) {
+                    var nameCell = rows[i].getElementsByTagName("td")[2].textContent.toLowerCase();
+                    var lastnameCell = rows[i].getElementsByTagName("td")[3].textContent.toLowerCase();
+                    var emailCell = rows[i].getElementsByTagName("td")[4].textContent.toLowerCase();
+                    var companyCell = rows[i].getElementsByTagName("td")[8].textContent.toLowerCase();
+                    var typeCell = rows[i].getElementsByTagName("td")[13];
+                    var statusCell = rows[i].getElementsByTagName("td")[14];
+                    var regCell = rows[i].getElementsByTagName("td")[16];
+                    var dateCell = rows[i].getElementsByTagName("td")[17];
+
+                    var typeChecked = (
+                            (typeCheckboxes["inviteeCheckbox"].checked && typeCell.textContent.trim().toLowerCase() === "invitee") ||
+                            (typeCheckboxes["vipCheckbox"].checked && typeCell.textContent.trim().toLowerCase() === "vip") ||
+                            (typeCheckboxes["mediaCheckbox"].checked && typeCell.textContent.trim().toLowerCase() === "media")
+                        );
+
+                        var statusChecked = (
+                            (statusCheckboxes["participantCheckbox"].checked && statusCell.textContent.trim().toLowerCase() === "participant") ||
+                            (statusCheckboxes["registrantCheckbox"].checked && statusCell.textContent.trim().toLowerCase() === "registrant")
+                        );
+
+                        var regChecked = (
+                            (regCheckboxes["pendingCheckbox"].checked && regCell.textContent.trim().toLowerCase() === "pending") ||
+                            (regCheckboxes["confirmedCheckbox"].checked && regCell.textContent.trim().toLowerCase() === "confirmed") ||
+                            (regCheckboxes["deniedCheckbox"].checked && regCell.textContent.trim().toLowerCase() === "denied")
+                        );
+
+                        var dateColumn = new Date(dateCell.textContent);
+                        const withinDateRange = (endDate === null || (dateColumn.getTime() >= startDate.getTime() && dateColumn.getTime() <= endDate.getTime()));
+
+                        var typeCategoryChecked = Object.values(typeCheckboxes).some(checkbox => checkbox.checked);
+                        var statusCategoryChecked = Object.values(statusCheckboxes).some(checkbox => checkbox.checked);
+                        var regCategoryChecked = Object.values(regCheckboxes).some(checkbox => checkbox.checked);
+
+
+                    var showRow = false;
+
+                    if (startDate && endDate) {
+                        
+                        if (
+                            (firstName && !nameCell.includes(firstName)) ||
+                            (lastName && !lastnameCell.includes(lastName)) ||
+                            (company && !companyCell.includes(company)) ||
+                            (email && !emailCell.includes(email)) ||
+                            (typeCategoryChecked && !typeChecked) ||
+                            (statusCategoryChecked && !statusChecked) ||
+                            (regCategoryChecked && !regChecked) ||
+                            !withinDateRange
+                        ) {
+                            showRow = false;
+                        } else {
+                            showRow = true;
+                        }
+
+                       
+                    } else {
+                        if (
+                            (firstName && !nameCell.includes(firstName)) ||
+                            (lastName && !lastnameCell.includes(lastName)) ||
+                            (email && !emailCell.includes(email)) ||
+                            (company && !companyCell.includes(company)) ||
+                            (typeCategoryChecked && !typeChecked) || 
+                            (statusCategoryChecked && !statusChecked) || 
+                            (regCategoryChecked && !regChecked) 
+                        ) {
+                            showRow = false;
+                        } else {
+                            showRow = true;
+                        }
+                        
+                    }
+                    
+                    if (showRow) {
+                        rows[i].style.display = "";
+                        visibleRowCount++;
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+
+                updateRowCount(visibleRowCount);
+                submitClicked = false;
+            }
+
+
+
+            // ----------------sort by date----------------------------------
+            function sortTableByDate(columnIndex) {
+                var table = document.getElementById('tableregistrant');
+                var tbody = table.querySelector('tbody');
+                var rows = Array.from(tbody.querySelectorAll('tr'));
+
+                var sortOrder = table.getAttribute('data-sort-order') || 'asc';
+
+                rows.sort(function (a, b) {
+                    var dateA = new Date(a.cells[columnIndex].textContent.trim());
+                    var dateB = new Date(b.cells[columnIndex].textContent.trim());
+
+                    // Toggle sorting order
+                    if (sortOrder === 'asc') {
+                        return dateA - dateB;
+                    } else {
+                        return dateB - dateA;
+                    }
+                });
+
+                sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+                table.setAttribute('data-sort-order', sortOrder);
+
+                tbody.innerHTML = '';
+
+                rows.forEach(function (row) {
+                    tbody.appendChild(row);
+                });
+            }
+
+            // ----------------sort by date----------------------------------
+
+            // ------------------------sort by alphabetical-------------------------
+            function sortTableAlphabetically(columnIndex) {
+                var table = document.getElementById('tableregistrant');
+                var tbody = table.querySelector('tbody');
+                var rows = Array.from(tbody.querySelectorAll('tr'));
+
+                var sortOrder = table.getAttribute('data-sort-order') || 'asc';
+
+                rows.sort(function (a, b) {
+                    var textA = a.cells[columnIndex].textContent.trim().toLowerCase();
+                    var textB = b.cells[columnIndex].textContent.trim().toLowerCase();
+
+                    if (sortOrder === 'asc') {
+                        return textA.localeCompare(textB);
+                    } else {
+                        return textB.localeCompare(textA);
+                    }
+                });
+
+                sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+                table.setAttribute('data-sort-order', sortOrder);
+
+                tbody.innerHTML = '';
+
+                rows.forEach(function (row) {
+                    tbody.appendChild(row);
+                });
+            }
+
+            // ------------------------sort by alphabetical-------------------------
+
+            // -----------------------------table export-------------------------------------------
+            document.getElementById('exportButton').addEventListener('click', function () {
+                var table = document.querySelector('#tableregistrant');
+                var csvContent = [];
+
+                var headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
+                csvContent.push(headers.map(header => `"${header}"`).join(','));
+
+                var validRows = table.querySelectorAll('tbody tr');
+                validRows.forEach(function (row) {
+                    if (row.style.display !== 'none') { 
+                        var rowData = Array.from(row.cells).map(cell => `"${cell.textContent.trim()}"`);
+                        csvContent.push(rowData.join(','));
+                    }
+                });
+
+                var csvData = csvContent.join('\n');
+                var blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+
+                if (navigator.msSaveBlob) { 
+                    navigator.msSaveBlob(blob, 'Registrants.csv');
+                } else {
+                    var link = document.createElement('a');
+                    if (link.download !== undefined) {
+                        var url = URL.createObjectURL(blob);
+                        link.setAttribute('href', url);
+                        link.setAttribute('download', 'Registrants.csv');
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }
+                }
+            });
+
+            // -----------------------------table export-------------------------------------------
+
+            // ---------------------row count------------------------------------------------
+            
+
+            function updateRowCount(count) {
+                document.getElementById('rowCountNumber').textContent = count;
+                console.log('Row count updated:', count);
+            }
+
+            const rowCount = document.querySelectorAll('#tableBody tr').length;
+            updateRowCount(rowCount);
+           
+            document.addEventListener('DOMContentLoaded', function () {
+                const editButtons = document.querySelectorAll('.edit-button');
+
+                editButtons.forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        const dataId = button.getAttribute('data-id');
+                        const editModal = document.getElementById(`editModal-${dataId}`);
+                        const editForm = document.getElementById(`editForm-${dataId}`);
+
+                        // Open the modal
+                        editModal.style.display = 'block';
+
+                        // Handle the close button within the modal
+                        const closeModal = document.getElementById(`closeModal-${dataId}`);
+                        closeModal.addEventListener('click', function () {
+                            editModal.style.display = 'none';
+                        });
+
+                    });
+                });
+
+            });
+
+            // ---------------------row count------------------------------------------------
+
+        </script>
+          
+        
+        <%- include('../partials/footer'); %>
+    </body>
+</html>

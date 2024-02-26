@@ -1,0 +1,635 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head'); %>
+    </head>
+    <body>
+        <div class="second-nav">
+            <div class="nav2">
+                <h5> Events <span style="font-weight: 600;">></span> Analytics <span style="font-weight: 600;">></span> <span><a href="/reports">Registration Count</a></span></h5>
+                <h1>Registration Count</h1>
+                <div class="mt-4" style="display: flex; align-items: flex-start;">
+                    <h5><button class="tablinks active" onclick="window.location.href = '/reports';" >All</button></h5>
+                    <h5 style="margin-left: 10px;"><button class="tablinks" onclick="chartAnalytics(event, 'Graph')">Bar</button></h5>
+                    <h5 style="margin-left: 10px;"><button class="tablinks" onclick="chartAnalytics(event, 'Bar')" >Graph</button></h5> 
+                </div>
+
+            </div>
+
+        </div>
+        <header><%- include('../partials/header'); %></header>
+
+        <main class="container">
+
+                <div class="cont">
+
+                  <div class="reports-cont">
+                    <div>
+                        <h3 id="peakTitle">Peak Day: <%= peakDay %> with <%= peakCount %> registrations</h3>
+                        <select id="dateSelector">
+                          <option value="day">Day</option>
+                          <option value="month">Month</option>
+                          <option value="year">Year</option>
+                        </select>
+                      </div>
+                      
+    
+                      <div id="Graph" class="tabcontent">
+                        <div class="chart-container">
+                            <canvas id="line"></canvas>
+                        </div>
+                        
+                        
+                      </div>
+                      
+                      <div id="Bar" class="tabcontent">
+                        
+                        <div class="chart-container">
+                            <canvas id="chart"></canvas>
+                        </div>
+                        
+                        
+                      </div>
+                  </div>
+
+                 <div class="mt-3" id="about-container">
+                    <div class="d-flex bd-highlight vertical-center">
+                        <div class="me-auto p-2 bd-highlight">
+                            <h2 style="font-weight: normal;">Registrant Details</h2>
+                        </div>
+                        <div class="reports-btn btn-group">
+                            <button type="button" class="btn" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v" aria-hidden="true" style="font-size: 20px; color: #A02EA2;"></i>
+                            </button>
+                            <ul class="d dropdown-menu">
+                              <li><a href="#" class="dropdown-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">Filter</a></li>
+                              <li><a href="#" class="dropdown-item" id="exportButton">Export (.csv)</a></li>
+                              
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="table table-hover" id="tableregistrant">
+                            <thead>
+                                <tr>
+                                    <th class="col-1"> #
+                                        <a onclick="sortTableAlphabetically(0)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th>Date of Registration
+                                        <a onclick="sortTableAlphabetically(1)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th>Registration id
+                                        <a onclick="sortTableAlphabetically(2)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">First Name 
+                                        <a onclick="sortTableAlphabetically(3)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Last Name 
+                                        <a onclick="sortTableAlphabetically(4)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Email
+                                        <a onclick="sortTableAlphabetically(5)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Mobile No.
+                                        <a onclick="sortTableAlphabetically(6)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Company
+                                        <a onclick="sortTableAlphabetically(7)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Company Address
+                                        <a onclick="sortTableAlphabetically(8)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Website
+                                        <a onclick="sortTableAlphabetically(9)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th>Type
+                                        <a onclick="sortTableAlphabetically(10); filterTable()"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                    <th class="col-1">Registration Status
+                                        <a onclick="sortTableAlphabetically(11)"><i class="fa fa-sort"></i></a>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <% data.forEach(function(data, index) { %>
+                                    <tr>
+                                        <td><%=index + 1 %></td>
+                                        <td><%= data.registrationDate %></td>
+                                        <td><%= data._id %></td>
+                                        <td><%= data.firstName %></td>
+                                        <td><%= data.lastName %></td>
+                                        <td><%= data.email %></td>
+                                        <td><%= data.mobile %></td>
+                                        <td><%= data.company %></td>
+                                        <td><%= data.companyAddress %></td>
+                                        <td><%= data.website %></td>
+                                        <td><%= data.type %></td>
+                                        <td><%= data.registrationStatus%></td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-3 text-center" id="rowCount">
+                        <span id="rowCountNumber"></span> registrants
+                    </div>
+
+                 </div> <!--- end about-container ---->
+
+                </div><!--- end cont ---->
+          
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                    <div class="offcanvas-header d-flex bd-highlight vertical-center">
+                        <div class="me-auto bd-highlight">
+                            <h3 id="offcanvasRightLabel" >Filter Data</h3>
+                        </div>
+                        <div class="p-2 bd-highlight">
+                            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div >
+                            <h4 style="margin-bottom: 3%;">Contact Information</h4>
+                            <div class="form-group">
+                                <label for="f_name">First Name</label>
+                                <input type="text" class="form-control" id="f_name" placeholder="Search Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="f_email">Email address</label>
+                                <input type="email" class="form-control" id="f_email" placeholder="Search Email">
+                            </div>
+                            <div class="form-group">
+                                <label for="f_company">Company</label>
+                                <input type="text" class="form-control" id="f_company" placeholder="Search Company">
+                            </div>
+                            
+                            <h4 style="margin-bottom: 3%; margin-top: 3%;">Registrant Details</h4>
+    
+                            <div class="about-section">
+                                <h6>Type</h6>
+                                <div class="form-check">
+                                    <input type="checkbox" id="inviteeCheckbox" onclick="filterTable()">
+                                    <label class="form-check-label" for="inviteeCheckbox">
+                                      Invitee
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="vipCheckbox" onclick="filterTable()">
+                                    <label class="form-check-label" for="vipCheckbox">
+                                      VIP
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="mediaCheckbox" onclick="filterTable()">
+                                    <label class="form-check-label" for="mediaCheckbox">
+                                      Media
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="about-section">
+                                <h6>Registration Status</h6>
+                                <div class="form-check">
+                                    <input type="checkbox" id="pendingCheckbox" onclick="filterTable()">
+                                    <label class="form-check-label" for="pendingCheckbox">
+                                      Pending
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="confirmedCheckbox" onclick="filterTable()">
+                                    <label class="form-check-label" for="confirmedCheckbox">
+                                      Confirmed
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="deniedCheckbox" onclick="filterTable()">
+                                    <label class="form-check-label" for="deniedCheckbox">
+                                      Denied
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="about-section">
+                                <h6>Date of Registration</h6>
+                                <div class="form-row"> <!-- Add form-row class here -->
+                                  <div class="form-group col-md-6">
+                                    <label>From</label>
+                                    <input type="text" class="form-control" id="startDatePicker" placeholder="Select start date">
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label>To</label>
+                                    <input type="text" class="form-control" id="endDatePicker" placeholder="Select end date">
+                                  </div>
+                                </div>
+                            </div>
+                    
+                        <button class="btn btn-primary" onclick="submitFilter()" data-bs-dismiss="offcanvas"  style="border: 2px solid #0dcaf0">Submit</button>
+                    </div>
+                </div> <!-- end offcanvas -->
+                  
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script >
+
+                // ------------------------- filter -----------------------------
+
+                var submitClicked = false;
+
+                // Date picker initialization
+                const startDatePicker = flatpickr("#startDatePicker", {
+                    dateFormat: "Y-m-d H:i:S",
+                    defaultDate: null,
+                });
+
+                const endDatePicker = flatpickr("#endDatePicker", {
+                    dateFormat: "Y-m-d H:i:S",
+                    defaultDate: null,
+                });
+
+                function submitFilter() {
+                    // Set the submitClicked flag
+                    submitClicked = true;
+
+                    // Call both filtering functions
+                    filterTable();
+                }
+
+                //checkbox filter
+                function toggleCombinedDropdown() {
+                    var combinedDropdown = document.getElementById("combinedFilterDropdown");
+                    if (combinedDropdown.style.display === "none") {
+                        combinedDropdown.style.display = "block";
+                        document.getElementById("search").disabled = true
+                        document.getElementById("search-btn").disabled = true
+                    } else {
+                        combinedDropdown.style.display = "none";
+                        document.getElementById("search").disabled = false
+                        document.getElementById("search-btn").disabled = true
+                    }
+                }
+
+                function filterTable() {
+                if (!submitClicked) {
+                    return;
+                }
+
+                const startDate = startDatePicker.selectedDates.length > 0 ? startDatePicker.selectedDates[0] : null;
+                let endDate = endDatePicker.selectedDates.length > 0 ? endDatePicker.selectedDates[0] : null;
+
+                if (endDate !== null) {
+                    endDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 23, 59, 59, 999);
+                }
+
+                var typeCheckboxes = {
+                    "inviteeCheckbox": document.getElementById("inviteeCheckbox"),
+                    "vipCheckbox": document.getElementById("vipCheckbox"),
+                    "mediaCheckbox": document.getElementById("mediaCheckbox")
+                };
+
+                var regCheckboxes = {
+                    "pendingCheckbox": document.getElementById("pendingCheckbox"),
+                    "confirmedCheckbox": document.getElementById("confirmedCheckbox"),
+                    "deniedCheckbox": document.getElementById("deniedCheckbox")
+                };
+
+                var firstNameElement = document.getElementById("f_name");
+                var firstName = firstNameElement ? firstNameElement.value.trim().toLowerCase() : '';
+
+                var lastNameElement = document.getElementById("l_name");
+                var lastName = lastNameElement ? lastNameElement.value.trim().toLowerCase() : '';
+
+                var companyElement = document.getElementById("company");
+                var company = companyElement ? companyElement.value.trim().toLowerCase() : '';
+
+                var emailElement = document.getElementById("email");
+                var email = emailElement ? emailElement.value.trim().toLowerCase() : '';
+
+                var visibleRowCount = 0;
+                var table = document.getElementById("tableBody");
+                var rows = table.getElementsByTagName("tr");
+
+                for (var i = 0; i < rows.length; i++) {
+                    var nameCell = rows[i].getElementsByTagName("td")[3].textContent.toLowerCase();
+                    var lastnameCell = rows[i].getElementsByTagName("td")[4].textContent.toLowerCase();
+                    var emailCell = rows[i].getElementsByTagName("td")[5].textContent.toLowerCase();
+                    var companyCell = rows[i].getElementsByTagName("td")[7].textContent.toLowerCase();
+                    var typeCell = rows[i].getElementsByTagName("td")[10];
+                    var regCell = rows[i].getElementsByTagName("td")[11];
+                    var dateCell = rows[i].getElementsByTagName("td")[1];
+
+                    var typeChecked = (
+                            (typeCheckboxes["inviteeCheckbox"].checked && typeCell.textContent.trim().toLowerCase() === "invitee") ||
+                            (typeCheckboxes["vipCheckbox"].checked && typeCell.textContent.trim().toLowerCase() === "vip") ||
+                            (typeCheckboxes["mediaCheckbox"].checked && typeCell.textContent.trim().toLowerCase() === "media")
+                        );
+                    var regChecked = (
+                            (regCheckboxes["pendingCheckbox"].checked && regCell.textContent.trim().toLowerCase() === "pending") ||
+                            (regCheckboxes["confirmedCheckbox"].checked && regCell.textContent.trim().toLowerCase() === "confirmed") ||
+                            (regCheckboxes["deniedCheckbox"].checked && regCell.textContent.trim().toLowerCase() === "denied")
+                        );
+                        var dateColumn = new Date(dateCell.textContent);
+                        const withinDateRange = (endDate === null || (dateColumn.getTime() >= startDate.getTime() && dateColumn.getTime() <= endDate.getTime()));
+
+                        var typeCategoryChecked = Object.values(typeCheckboxes).some(checkbox => checkbox.checked);
+                        var regCategoryChecked = Object.values(regCheckboxes).some(checkbox => checkbox.checked);
+
+                    var showRow = false;
+
+                    if (startDate && endDate) {
+                        
+                        if (
+                            (firstName && !nameCell.includes(firstName)) ||
+                            (lastName && !lastnameCell.includes(lastName)) ||
+                            (company && !companyCell.includes(company)) ||
+                            (email && !emailCell.includes(email)) ||
+                            (typeCategoryChecked && !typeChecked) ||
+                            (regCategoryChecked && !regChecked) ||
+                            !withinDateRange
+                        ) {
+                            showRow = false;
+                        } else {
+                            showRow = true;
+                        }
+
+                       
+                    } else {
+                        if (
+                            (firstName && !nameCell.includes(firstName)) ||
+                            (lastName && !lastnameCell.includes(lastName)) ||
+                            (email && !emailCell.includes(email)) ||
+                            (company && !companyCell.includes(company)) ||
+                            (regCategoryChecked && !regChecked) ||
+                            (typeCategoryChecked && !typeChecked) ) {
+                            showRow = false;
+                        } else {
+                            showRow = true;
+                        }
+                        
+                    }
+                    
+                    if (showRow) {
+                        rows[i].style.display = "";
+                        visibleRowCount++;
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+
+                updateRowCount(visibleRowCount);
+                submitClicked = false;
+            }
+    
+                // ----------------sort by date----------------------------------
+                 function sortTableByDate(columnIndex) {
+                var table = document.getElementById('tableregistrant');
+                var tbody = table.querySelector('tbody');
+                var rows = Array.from(tbody.querySelectorAll('tr'));
+
+                // Get the current sorting order for the column
+                var sortOrder = table.getAttribute('data-sort-order') || 'asc';
+
+                rows.sort(function (a, b) {
+                    var dateA = new Date(a.cells[columnIndex].textContent.trim());
+                    var dateB = new Date(b.cells[columnIndex].textContent.trim());
+
+                    // Toggle sorting order
+                    if (sortOrder === 'asc') {
+                        return dateA - dateB;
+                    } else {
+                        return dateB - dateA;
+                    }
+                });
+
+                // Toggle sorting order for the next click
+                sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+                table.setAttribute('data-sort-order', sortOrder);
+
+                // Clear the existing rows in the table
+                tbody.innerHTML = '';
+
+                // Append the sorted rows to the table
+                rows.forEach(function (row) {
+                    tbody.appendChild(row);
+                });
+            }
+
+            // ----------------sort by date----------------------------------
+
+            // ------------------------sort by alphabetical-------------------------
+            function sortTableAlphabetically(columnIndex) {
+                var table = document.getElementById('tableregistrant');
+                var tbody = table.querySelector('tbody');
+                var rows = Array.from(tbody.querySelectorAll('tr'));
+
+                // Get the current sorting order for the column
+                var sortOrder = table.getAttribute('data-sort-order') || 'asc';
+
+                rows.sort(function (a, b) {
+                    var textA = a.cells[columnIndex].textContent.trim().toLowerCase();
+                    var textB = b.cells[columnIndex].textContent.trim().toLowerCase();
+
+                    // Toggle sorting order
+                    if (sortOrder === 'asc') {
+                        return textA.localeCompare(textB);
+                    } else {
+                        return textB.localeCompare(textA);
+                    }
+                });
+
+                // Toggle sorting order for the next click
+                sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+                table.setAttribute('data-sort-order', sortOrder);
+
+                // Clear the existing rows in the table
+                tbody.innerHTML = '';
+
+                // Append the sorted rows to the table
+                rows.forEach(function (row) {
+                    tbody.appendChild(row);
+                });
+            }
+
+            // -----------------------------table export-------------------------------------------
+            document.getElementById('exportButton').addEventListener('click', function () {
+                var table = document.querySelector('#tableregistrant');
+                var csvContent = [];
+
+                var headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
+                csvContent.push(headers.map(header => `"${header}"`).join(','));
+
+                var validRows = table.querySelectorAll('tbody tr');
+                validRows.forEach(function (row) {
+                    if (row.style.display !== 'none') { 
+                        var rowData = Array.from(row.cells).map(cell => `"${cell.textContent.trim()}"`);
+                        csvContent.push(rowData.join(','));
+                    }
+                });
+
+                var csvData = csvContent.join('\n');
+                var blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+
+                if (navigator.msSaveBlob) { 
+                    navigator.msSaveBlob(blob, 'Registrant Count.csv');
+                } else {
+                    var link = document.createElement('a');
+                    if (link.download !== undefined) {
+                        var url = URL.createObjectURL(blob);
+                        link.setAttribute('href', url);
+                        link.setAttribute('download', 'Registrant Count.csv');
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }
+                }
+            });
+
+
+            // -----------------------------table export-------------------------------------------
+ 
+                    const registrationCount = JSON.parse('<%- registrationCounts%>');
+                    const countPerMonth = JSON.parse('<%- countPerMonth%>');
+                    const countPerYear = JSON.parse('<%- countPerYear%>');
+
+                    //tabs
+                    function chartAnalytics(chart, type) {
+                    var i, tabcontent, tablinks;
+                    tabcontent = document.getElementsByClassName("tabcontent");
+                    for (i = 0; i < tabcontent.length; i++) {
+                        tabcontent[i].style.display = "none";
+                    }
+                    tablinks = document.getElementsByClassName("tablinks");
+                    for (i = 0; i < tablinks.length; i++) {
+                        tablinks[i].className = tablinks[i].className.replace(" active", "");
+                    }
+                    document.getElementById(type).style.display = "block";
+                    chart.currentTarget.className += " active";
+
+                    
+                    }
+
+                    // chart
+                    const ctx = document.getElementById("chart").getContext("2d");
+
+                    const chart = new Chart(ctx, {
+                        type: "bar",
+                        data: {
+                            labels: Object.keys(registrationCount),
+                            datasets: [
+                                {
+                                    label: "Registrations per Day",
+                                    data: Object.values(registrationCount),
+                                    backgroundColor: "RGBA(160,46,162,0.2)",
+                                    borderColor: "#A02EA2",
+                                    borderWidth: 1,
+                                },
+                            ],
+                        },
+                        options: {
+                            maintainAspectRatio: false, // Important for adjusting the chart's size
+                            responsive: true, // Ensure chart responsiveness
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1, // Set the step size to 1
+                                    },
+                                },
+                            },
+                        },
+                    });
+
+                    
+                    // graph
+                    const line = document.getElementById("line").getContext("2d");
+                    const lineGraph = new Chart(line, {
+                        type: "line",
+                        data: {
+                            labels: Object.keys(registrationCount),
+                            datasets: [
+                                {
+                                    label: "Registrations per Day",
+                                    data: Object.values(registrationCount),
+                                    backgroundColor: "RGBA(160,46,162,0.2)",
+                                    borderColor: "#A02EA2",
+                                    borderWidth: 1,
+                                    fill: false, // Make the line graph not filled
+                                },
+                            ],
+                        },
+                        options: {
+                            maintainAspectRatio: false, // Important for adjusting the chart's size
+                            responsive: true, // Ensure chart responsiveness
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1, // Set the step size to 1
+                                    },
+                                },
+                            },
+                        },
+                    });
+
+                    let peakDay = "InitialPeakDay";
+
+                    document.getElementById("dateSelector").addEventListener("change", (event) => {
+                    const selectedInterval = event.target.value;
+                    let selectedData, selectedLabel;
+
+                    if (selectedInterval === "day") {
+                        selectedData = registrationCount;
+                        selectedLabel = "Registrations per Day";
+                    } else if (selectedInterval === "month") {
+                        selectedData = countPerMonth;
+                        selectedLabel = "Registrations per Month";
+                    } else if (selectedInterval === "year") {
+                        selectedData = countPerYear;
+                        selectedLabel = "Registrations per Year";
+                    }
+
+                    // Find the peak day
+                    peakDay = Object.keys(selectedData).reduce((maxDay, currentDay) => {
+                        return selectedData[currentDay] > selectedData[maxDay] ? currentDay : maxDay;
+                    }, Object.keys(selectedData)[0]); 
+
+                    // Update the title
+                    document.getElementById("peakTitle").innerText = `Peak ${selectedInterval.charAt(0).toUpperCase() + selectedInterval.slice(1)}: ${peakDay} with ${selectedData[peakDay]} registrations`;
+
+                    // Update the chart's data and label
+                    chart.data.labels = Object.keys(selectedData);
+                    chart.data.datasets[0].label = selectedLabel;
+                    chart.data.datasets[0].data = Object.values(selectedData);
+
+                    chart.update();
+
+                    // Update the chart's data and label
+                    lineGraph.data.labels = Object.keys(selectedData);
+                    lineGraph.data.datasets[0].label = selectedLabel;
+                    lineGraph.data.datasets[0].data = Object.values(selectedData);
+
+                    lineGraph.update();
+                    });
+
+   
+                    // ---------------------row count------------------------------------------------
+            
+
+            function updateRowCount(count) {
+                document.getElementById('rowCountNumber').textContent = count;
+                console.log('Row count updated:', count);
+            }
+
+            const rowCount = document.querySelectorAll('#tableBody tr').length;
+            updateRowCount(rowCount);
+           
+
+            // ---------------------row count------------------------------------------------
+
+                
+                </script>
+        </main>
+        <%- include('../partials/footer'); %>
+    </body>
+</html>

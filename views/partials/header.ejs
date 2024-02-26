@@ -1,0 +1,271 @@
+<!-- Navbar -->
+<nav id="main-navbar" class="navbar navbar-light bg-light fixed-top">
+  <!-- Container wrapper -->
+    <!---- Toggle-bar ------>
+    
+    <!-- <div class="topnav"> -->
+      <div id="topnav-left " class=" d-flex">
+        <button id="toggle-bar"><i class="fa fa-bars" style="font-size: 22px; color: black;"></i></button>
+        <div class="d-flex align-items-center">
+          <a class="navbar-brand" href="/" style="padding-right: 0px;">
+            <img src="/assets/images/Euodoo.png" alt="Image" style="width: 90px; height: auto; padding: 0; float: left">
+          </a>
+          <div class="vl"></div>
+          <div class="nav-events">Events</div>
+        </div>
+      </div>
+      <div id="topnav-right" class="profile-dropdown">
+        <div class="drop-info">
+          <button class="d-btn">
+            <i class="far fa-question-circle dropinfo" onclick="dropInfo()"></i>
+          </button>
+          <div class="dropdown-info">
+            <a href="/help&support"><i class="far fa-question-circle"></i> Ask for Help & Support </a>
+          </div>
+        </div>
+        <div class="drop-admin">
+          <button class="d-btn">
+            <i class="fa fa-cog dropadmin" onclick="dropAdmin()"></i>
+          </button>
+          <div class="dropdown-admin">
+            <a href="/admin"><i class="fa fa-cog me-3" aria-hidden="true"></i>Control Panel</a>
+          </div>
+        </div>
+        <div class="dropdown-profile">
+          <button class="d-btn">
+            <i class='fas fa-user-circle dropbtn' onclick="myFunction()"></i><i class="fa fa-caret-down dropbtn ms-1" onclick="myFunction()"></i>
+          </button>
+          <div class="dropdown-c" id="myDropdown">
+            <div class="profile text-center mt-3">
+              <i class='fas fa-user-circle user-i'></i> <br/>
+              <div class="profile-info">
+                <h5 class="mt-2"><%= user.username %><br/>
+                  <span style="font-size: 14px; font-weight: normal;"><%= user.email %></span></h5>
+              </div>
+              <button class="profile-edit mt-2">
+                <a href="/my-profile">Edit Profile</a>
+              </button>
+
+              <div class="end-nav">
+                <form action="/logout" method="GET">
+                  <button href="#" class="list-group-item list-group-item-action">
+                      <i class="fas fa-sign-out-alt me-2" aria-hidden="true" style="font-size: 18px;"></i><span style="font-size: 18px;">Log out</span>
+                  </button>
+                </form>
+              </div> <!----end-nav-->
+            </div>
+            
+          </div>
+        </div> <!---dropdown-->        
+      </div> <!---topnav - right-->
+
+  
+</nav>
+<!-- Sidebar -->
+
+<nav id="sidebarMenu" class="collapse sidebar collapse bg-white">
+  <div class="position-sticky">
+      <div class="list-group list-group-flush pt-2">
+
+          <a href="/" class="list-group-item list-group-item-action py-2 ripple">
+              <i class="fa fa-home me-3" aria-hidden="true"></i><span>Home</span>
+          </a>
+
+          <!-- <a href="/form-content" class="list-group-item list-group-item-action py-2 ripple">
+            <i class="fas fa-edit me-3"></i><span>Create Form</span>
+          </a> -->
+
+          <a href="/about" class="list-group-item list-group-item-action py-2 ripple">
+            <i class="fas fa-user-edit me-3"></i><span>Registrant Details</span>
+          </a>
+
+          <a href="/scan" class="list-group-item list-group-item-action py-2 ripple">
+            <i class="fas fa-qrcode  me-3"></i><span>Scanner</span>
+          </a>
+        
+        <button class="list-group-item list-group-item-action not-active py-2 ripple dropdown ">
+            <i class="fa fa-bar-chart me-3" aria-hidden="true"></i><span class="span-analytics">Analytics</span>
+            <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-container" style="display:none;">
+          <ul>
+            <li><a class="list-group-item list-group-item-action dropdown-item py-2" href="/reports">Registration Count</a></li>
+            <li><a class="list-group-item list-group-item-action dropdown-item py-2" href="/reports/event-participants" >Scanned Registrants</a></li>
+          </ul>
+        </div>
+
+      </div>
+  </div>
+</nav>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+let menu 
+document.addEventListener("DOMContentLoaded", function() {
+    menu = document.getElementById("sidebarMenu");
+    const side = document.getElementById("toggle-bar");
+    const main = document.querySelector(".cont");
+    const secondNav = document.querySelector(".second-nav");
+
+    const currentPage = window.location.pathname;
+
+    function updateMenuDisplay() {
+        if (menu) {
+            if (window.innerWidth <= 900 || currentPage === "/connection-error" || currentPage === "/help&support") {
+                menu.style.display = "none";
+                main.style.marginLeft = "-3%";
+                secondNav.style.marginLeft = "-3%";
+            } else {
+                menu.style.display = "inline-block";
+            }
+        }
+    }
+
+    updateMenuDisplay(); 
+
+    window.addEventListener("resize", updateMenuDisplay);
+
+    if (main) {
+        main.classList.toggle('body-sidebar-open');
+        secondNav.classList.add('body-sidebar-open');
+
+        side.addEventListener('click', buttonClickHandler);
+
+        function buttonClickHandler() {
+            if (menu && menu.style.display === "inline-block") {
+                menu.style.display = "none";
+                main.classList.remove('body-sidebar-open');
+                secondNav.classList.remove('body-sidebar-open');
+            } else if (menu) {
+                menu.style.display = "inline-block";
+                main.classList.add('body-sidebar-open');
+                secondNav.classList.add('body-sidebar-open');
+            }
+        }
+    } else {
+        console.error("Element with id 'main' not found.");
+    }
+});
+
+
+$(document).ready(function() {
+    var currentUrl = window.location.pathname;
+    var activeItem = $('.list-group-item[href="' + currentUrl + '"]');
+    
+    activeItem.addClass('active');
+    
+    if (activeItem.hasClass('dropdown')) {
+        activeItem.find('.dropdown-container').show();
+    }
+});
+
+
+  //drop down sidebarmenu
+  var dropdown = document.getElementsByClassName("dropdown");
+  var i;
+
+  for (i = 0; i < dropdown.length; i++) {
+    dropdown[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var dropdownContent = this.nextElementSibling;
+      
+      if (dropdownContent && dropdownContent.style.display === "block") {
+        dropdownContent.style.display = "none";
+      } else if (dropdownContent) {
+        dropdownContent.style.display = "block";
+      }
+    });
+  }
+
+  //top nav
+    function myFunction() {
+      var dropContent = document.getElementById("myDropdown");
+      var dropbtn = document.querySelector(".dropdown-profile");
+      var dropIcon = document.querySelectorAll(".dropdown-profile i");
+      toggleDropdown(dropContent, dropbtn, dropIcon);
+    }
+
+    function dropInfo() {
+      var dropContentInfo = document.querySelector(".dropdown-info");
+      var dropInfo = document.querySelector(".drop-info");
+      var dropInfoIcon = document.querySelectorAll(".drop-info i");
+      toggleDropdown(dropContentInfo, dropInfo, dropInfoIcon);
+    }
+
+    function dropAdmin(){
+      var dropContentAdmin = document.querySelector(".dropdown-admin");
+      var dropAdmin= document.querySelector(".drop-admin");
+      var dropAdminIcon = document.querySelectorAll(".drop-admin i");
+      toggleDropdown(dropContentAdmin, dropAdmin, dropAdminIcon);
+    }
+      
+    function toggleDropdown(dropdownContent, trigger, icon) {
+    var isOpen = dropdownContent.classList.contains("show");
+
+    // Close other dropdowns
+    var otherDropdowns = document.querySelectorAll('.dropdown-profile, .drop-info, .drop-admin');
+    otherDropdowns.forEach(function (otherDropdown) {
+        if (otherDropdown !== dropdownContent) {
+            var content = otherDropdown.querySelector('.show');
+            if (content) {
+                content.classList.remove('show');
+                toggleStyles(otherDropdown, false);
+            }
+        }
+    });
+
+        dropdownContent.classList.toggle("show");
+
+        toggleStyles(trigger, !isOpen, dropdownContent, icon);
+    }
+
+    function toggleStyles(trigger, isOpen, dropdownContent, icon) {
+        var color, backgroundColor, padding, borderRadius;
+
+        if (isOpen) {
+            icon.forEach(function(icon) {
+              icon.style.color = "#A02EA2";
+            });
+            trigger.style.backgroundColor = "white";
+            trigger.style.padding = "10px 0 10px";
+            trigger.style.borderRadius = "10px 10px 0 0";
+        } else {
+          trigger.style.backgroundColor = "transparent";
+          trigger.style.padding = "0";
+          trigger.style.borderRadius = "0";
+
+          document.querySelector(".d-btn i.fa-cog").style.color = "black";
+          document.querySelector(".d-btn i.fa-user-circle").style.color = "black";
+          document.querySelector(".d-btn i.fa-caret-down").style.color = "black";
+          document.querySelector(".d-btn i.fa-question-circle").style.color = "black";
+
+            if (dropdownContent) {
+                dropdownContent.classList.remove("show");
+            }
+        }
+    }
+
+     window.onclick = function (e) {
+      if (!e.target.matches('.dropbtn') && !e.target.matches('.dropinfo') && !e.target.matches('.dropadmin')) {
+          var dropdowns = document.querySelectorAll('.dropdown-profile, .drop-info, .drop-admin');
+          dropdowns.forEach(function (dropdown) {
+              var content = dropdown.querySelector('.show');
+              if (content) {
+                  content.classList.remove('show');
+                  dropdown.style.backgroundColor = "transparent"; 
+                  dropdown.style.padding = "0";
+                  dropdown.style.borderRadius = "0";
+
+                  document.querySelector(".d-btn i.fa-cog").style.color = "black";
+                  document.querySelector(".d-btn i.fa-user-circle").style.color = "black";
+                  document.querySelector(".d-btn i.fa-caret-down").style.color = "black";
+                  document.querySelector(".d-btn i.fa-question-circle").style.color = "black";
+
+                  toggleStyles(dropdown.querySelector('.dropbtn, .dropinfo, .dropadmin'), false);
+              }
+          });
+      }
+    }
+
+
+</script>

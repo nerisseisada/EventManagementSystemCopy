@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    #form-elements {
+      float: left;
+      width: 200px;
+      padding: 10px;
+      background-color: #f4f4f4;
+    }
+
+    #form-preview {
+      float: left;
+      width: 500px;
+      min-height: 300px;
+      border: 2px dashed #ccc;
+      padding: 10px;
+      margin-left: 20px;
+      position: relative;
+    }
+
+    .row {
+      display: flex;
+      margin-bottom: 10px;
+    }
+    .form-element {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .draggable {
+      cursor: move;
+      background-color: violet;
+      padding: 10px;
+      box-sizing: border-box;
+      margin-right: 10px;
+      width: 100%;
+    }
+    .row:last-child {
+      margin-bottom: 10%; /* Adjust the value as needed */
+    }
+    #add-element-button {
+        position: absolute; 
+        margin-top: 10px !important;
+        bottom: 10px; 
+        left: 50%; 
+        transform: translateX(-50%);
+        padding: 5px;
+        background-color: #007BFF;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      z-index: 1000;
+    }
+
+    /* Style for the overlay */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+
+<div id="form-elements">
+  <div class="draggable" draggable="true" ondragstart="drag(event)" data-type="text">Text Input</div>
+  <div class="draggable" draggable="true" ondragstart="drag(event)" data-type="checkbox">Checkbox</div>
+</div>
+
+<div id="form-preview" ondrop="drop(event)" ondragover="allowDrop(event)">
+
+  <div id="add-element-button" onclick="toggleDialog()">+</div>
+</div>
+
+<div id="add-element-dialog" class="modal">
+    <label for="element-type">Choose element type:</label>
+    <select id="element-type">
+        <option value="text">Text Input</option>
+        <!-- Add more options for other types -->
+    </select>
+    <button id="add-button" onclick="addElement(event)">Add Element</button>
+    <button id="cancel-button" onclick="toggleDialog()">Cancel</button>
+</div>
+
+<div id="overlay" class="overlay"></div>
+
+<script>
+    // drag and drop
+  function allowDrop(event) {
+    event.preventDefault();
+  }
+
+  function drag(event) {
+    event.dataTransfer.setData("text", event.target.dataset.type);
+  }
+
+  function drop(event) {
+    event.preventDefault();
+    var elementType = event.dataTransfer.getData("text");
+    var element = document.createElement("div");
+    element.className = "draggable";
+    element.innerHTML  = elementType === "text" ? "<input type='text' class='form-element' placeholder='Text Input'>" : "Checkbox";
+    element.draggable = true;
+    element.ondragstart = function (e) {
+      drag(e);
+    };
+
+    // Get the drop area dimensions and position
+    var dropArea = document.getElementById("form-preview");
+    var lastRow = document.querySelector("#form-preview .row:last-child");
+
+    var isBelowExistingFields = event.clientY > (lastRow ? lastRow.getBoundingClientRect().bottom : dropArea.getBoundingClientRect().top);
+
+    if (isBelowExistingFields) {
+      var row = document.createElement("div");
+      row.className = "row";
+      row.appendChild(element);
+      dropArea.appendChild(row);
+
+      console.log("dropped below");
+    } else {
+      if (!lastRow || lastRow.children.length >= 2) {
+        var newRow = document.createElement("div");
+        newRow.className = "row";
+        newRow.appendChild(element);
+        dropArea.appendChild(newRow);
+
+        console.log("Created new row");
+      } else {
+        lastRow.appendChild(element);
+        console.log("Added to the last row");
+      }
+    }
+  }
+
+
+    // add button
+    function toggleDialog() {
+    var dialog = document.getElementById("add-element-dialog");
+    var overlay = document.getElementById("overlay");
+
+    if (dialog.style.display === "block") {
+      dialog.style.display = "none";
+      overlay.style.display = "none";
+    } else {
+      dialog.style.display = "block";
+      overlay.style.display = "block";
+    }
+    }
+
+    function addElement(event) {
+    event.preventDefault();
+
+    const select = document.getElementById("element-type").value;
+    var dialog = document.getElementById("add-element-dialog");
+    var overlay = document.getElementById("overlay");
+    var formPreview = document.getElementById("form-preview");
+    // var addButton = document.getElementById("add-element-button");
+
+    if (select === "text") {
+        var element = document.createElement("div");
+        var newRow = document.createElement("div");
+
+        element.className = "draggable";
+        element.innerHTML = "<input type='text' class='form-element' placeholder='Text Input'>";
+
+        newRow.className = "row";
+        newRow.appendChild(element);
+        formPreview.appendChild(newRow);
+
+        // addButton.parentNode.insertBefore(newRow, addButton);
+
+        dialog.style.display = "none";
+        overlay.style.display = "none";
+    }
+}
+
+
+
+</script>
+
+</body>
+</html>

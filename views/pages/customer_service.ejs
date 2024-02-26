@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head'); %>
+    </head>
+    <body>
+
+        <header>
+            <%- include('../partials/header'); %>
+        </header>
+        <div class="second-nav customer-banner no-sidebar mb-5" style="padding: 0!important;">
+            <div class="content-row">
+                <div class="column1">
+                  <h1>Customer Service</h1>
+                  <p>Our dedicated team is here to assist you. If you have any questions, concerns, or need help, feel free to reach out. Your satisfaction is our priority!</p>
+                </div>
+                <div class="column2">
+                  <img class="customer-service" src="assets/images/customer_service1.png">
+                </div>
+            </div>
+        </div>
+
+        <main class="container" style="padding-top: 0;">
+            <div class="cont no-sidebar">
+                
+                <div class="row justify-content-center mb-4" >
+                    <div class="contact card-left col-sm-12 col-md-12 col-lg-5 ">
+                        <div class="animated-border"></div>
+                        <div class="text-center">
+                          <i class="fas fa-envelope" style="font-size: 25px; background-color: #ECD5EC; padding: 4%; border-radius: 12px;"></i>
+                          <h3 class="mt-3">Talk with our sales representative</h3>
+                          <p>Enter your email address and we'll connect you to our representative.</p>
+                        </div>
+                        <div class="mt-5 center">
+                          <form method="POST" action="email-form" class="email-form ">
+
+                                <div class="input-group mb-3" id="send">
+                                    <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="Enter your email address" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                    <button class="send-button" id="button-addon2">
+                                        <i class="fas fa-paper-plane text-center" style="color: black"></i>
+                                    </button>
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="ml-4 contact card-right col-sm-12 col-md-12 col-lg-5 justify-content-center">
+                        <div class="animated-border"></div>
+                        <div class="text-center">
+                          <i class="fa fa-calendar" aria-hidden="true" style="font-size: 25px; background-color: #ECD5EC; padding: 4%; border-radius: 12px;"></i>
+                          <h3 class="mt-3">Schedule an appointment</h3>
+                          <p style="margin-bottom: 8%;">You can directly schedule an appointment with us to talk about your concerns.</p>
+                          <a class="book" href="https://euodoo.com.ph/schedule">Book Now!</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="faqs center">
+                    <h1 class="text-center" style="font-size: 50px;">FAQ</h1>
+                    <h5 class="text-center">Frequently Asked Questions</h5>
+                    <button class="accordion center mt-4">Section 1</button>
+                    <div class="panel center">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+    
+                    <button class="accordion center mt-2">Section 2</button>
+                    <div class="panel center">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+    
+                    <button class="accordion center mt-2">Section 3</button>
+                    <div class="panel center">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+                </div> -->
+                
+            </div>
+        
+
+            
+        </main>
+
+            <script>
+                var acc = document.getElementsByClassName("accordion");
+                var i;
+        
+                for (i = 0; i < acc.length; i++) {
+                acc[i].addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    var panel = this.nextElementSibling;
+                    if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                    } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                    } 
+                });
+                }
+            </script>
+
+        <%- include('../partials/footer'); %>
+
+    </body>
+
+    
+
+
+</html>

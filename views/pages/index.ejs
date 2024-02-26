@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head'); %>
+    </head>
+    <body>
+
+        <header>
+            <%- include('../partials/header'); %>
+        </header>
+        <div class="second-nav">
+            <div class="nav2">
+                <h5> Events <span style="font-weight: 600;">></span> <span><a href="/">Home</a></span></h5>
+                <h1>Expert Guidance for Business Success 2023</h1>
+                <div style="display: flex; align-items: flex-start;">
+                    <i class="far fa-calendar-alt" aria-hidden="true" style="font-size: 20px;"></i>
+                    <h5 style="margin-left: 10px; word-spacing: 5px;">01/23/2024 - 01/26/2024 9:00 AM</h5> 
+                    <div class="ms-3" style="display: flex; align-items: flex-start;">
+                        <i class="fas fa-map-marker-alt" style="font-size: 20px;"></i>
+                        <h5 style="margin-left: 10px; word-spacing: 5px;">123 Anywhere St., Any City</h5> 
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <main class="container">
+            <div class="cont">
+                <% if (success.length > 0) { %>
+    
+                    <div class="alert alert-success alert-dismissible fade show mt-2">
+                        <%= success %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+    
+                <%
+                }
+    
+                %>
+                <div class="banner">
+                    <!-- <h1>Online Registration</h1>
+                    <p>Welcome to our Euodoo Registration!</p> -->
+                    <img src="/assets/images/banner.png" alt="Image">
+                </div>                  
+    
+                    <form method="POST" id="registrationForm">
+                    
+                        <hr class="index-hr"/>
+                        <div class="mb-5">
+                            <h2 style="font-weight: bold; text-align: center;">Expert Guidance for Business Success 2023</h2>
+                            <h2 style="font-weight:normal; text-align:center;">Registration Form</h2>
+                            <p class="pt-4" style="font-weight:normal; font-size: 18px;">Welcome to the online registration for the "Expert Guidance for Business Success 2023" event! We are thrilled to invite you to participate in this insightful gathering, designed to provide invaluable guidance for achieving success in the dynamic world of business.
+                                <br/><br/>
+                                <span style="font-weight: bold;">Event Details:
+                                <br/>
+                                Event Name: Expert Guidance for Business Success 2023<br/>
+                                Date: January 23, 2024 - January 26, 2024<br/>
+                                Location: 123 Anywhere St., Any City<br/><br/>
+                                </span>
+                                Join us for a day filled with enriching discussions, interactive sessions, and networking opportunities with industry experts. Whether you're an aspiring entrepreneur or a seasoned business professional, this event aims to equip you with the knowledge and strategies needed to thrive in today's competitive business landscape.<br/>
+                                <br/>
+                                To secure your spot and take a step towards unlocking new possibilities for your business, please complete the online registration form below. We look forward to having you join us for this transformative experience!
+                            </p>
+                        </div>
+                        <div class="pt-5">
+                            <h3 style="font-weight:normal;">Personal Information</h3>
+                            <hr class="index-hr"/>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <label for="firstName" class="form-label">First Name <span class="required">*</span></label>
+                                <input type="text" value="<%= formData.firstName || '' %>" class="form-control" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="lastName" class="form-label">Last Name <span class="required">*</span></label>
+                                <input type="text" value="<%= formData.lastName || '' %>" class="form-control" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email <span class="required">*</span></label>
+                            <input type="email" value="<%= formData.email || '' %>" class="form-control" id="email" name="email" placeholder="sample@gmail.com" required>
+                            <div id="email-error" class="text-danger">
+                                <%= error %>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="home" class="form-label">Home Address <span class="required">*</span></label>
+                            <input type="text" value="<%= formData.home || '' %>" class="form-control" id="home" name="home" required>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <label for="mobile">Mobile Number <span class="required">*</span></label>
+                                <input type="tel" value="<%= formData.mobile || '' %>" id="mobile" name="mobile" class="form-control" placeholder="+(63) 9XX XXX XXXX" inputmode="numeric"  oninput="formatPhoneNumber(this)">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="tel">Telephone Number</label>
+                                <input type="tel" value="<%= formData.tel || '' %>" id="tel" name="tel" class="form-control" placeholder="+(632) XXXX XXXX" inputmode="numeric" oninput="formatTelNumber(this)">
+                            </div>
+                        </div>
+
+                        <div class="pt-5">
+                            <h3 style="font-weight:normal;">Company Information</h3>
+                            <hr class="index-hr"/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="company" class="form-label">Company Name <span class="required">*</span></label>
+                            <input type="text" value="<%= formData.company || '' %>" class="form-control" id="company" name="company" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="companyAddress" class="form-label">Company Address <span class="required">*</span></label>
+                            <input type="text" value="<%= formData.companyAddress || '' %>" class="form-control" id="companyAddress" name="companyAddress" required>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <label for="workMobileNumber">Work Mobile Number</label>
+                                <input type="tel" value="<%= formData.workMobileNumber || '' %>" id="workMobileNumber" name="workMobileNumber" class="form-control" placeholder="+(63) 9XX XXX XXXX" oninput="formatPhoneNumber(this)">
+                              </div>
+                              <div class="col-md-6">
+                                <label for="workTelephoneNumber">Work Telephone Number</label>
+                                <input type="tel" value="<%= formData.workTelephoneNumber || '' %>" id="workTelephoneNumber" name="workTelephoneNumber" class="form-control" placeholder="+(632) XXXX XXXX" oninput="formatTelNumber(this)">
+                              </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="website" class="form-label">Website <span class="required">*</span></label>
+                            <input type="url" value="<%= formData.website || '' %>" class="form-control" id="website" placeholder="http://www.example.com" name="website" required>
+                        </div>
+                        <label for="type">Registration Type <span class="required">*</span></label>
+                        <select class="form-select" aria-label="Default select example" id="type" name="type" required>
+                            <option selected>No selected registration type</option>
+                            <option value="invitee" <%= formData.type === 'invitee' ? 'selected' : '' %>>invitee</option>
+                            <option value="vip" <%= formData.type === 'vip' ? 'selected' : '' %>>vip</option>
+                            <option value="media" <%= formData.type === 'media' ? 'selected' : '' %>>media</option>
+                        </select> 
+                        <input type="hidden" id="registrationStatus" name="registrationStatus" value="Pending">
+                        <input type="hidden" name="registrationDate" id="registrationDate" value="">
+                        <br/>
+                        <button id="status" name="status" value="Registrant" type="submit" class="btn btn-primary"  style="padding: 1% 5% 1% 5%; border: 2px solid #0dcaf0" >Register</button>
+                  
+                    </form> 
+            </div>
+            
+
+                <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+                <script>
+
+                    //------------ disable submit button when required field is null -----------
+                    var registrationForm = document.getElementById('registrationForm');
+                    var submitButton = document.getElementById('status');
+
+                    submitButton.disabled = true;
+
+                    registrationForm.addEventListener('input', function () {
+                        if (registrationForm.checkValidity()) {
+                            submitButton.disabled = false;
+                        } else {
+                            submitButton.disabled = true;
+                        }
+                    });
+                
+                    document.addEventListener("DOMContentLoaded", function() {
+                        var registrationDateField = document.getElementById("registrationDate");
+                        var currentDate = new Date();
+            
+                        var formattedDate = currentDate.toLocaleString();
+
+                        registrationDateField.value = formattedDate;
+
+                    });
+
+                    function formatPhoneNumber(input) {
+                        const numericValue = input.value.replace(/\D/g, '');
+
+                        if (numericValue.length > 0) {
+                        // Use a regular expression to add dashes (2 digits, then 3 digits)
+                        const formattedValue = numericValue.replace(/^(\d{2})(\d{3})?(\d{3})?(\d{4})?/, '+($1) $2 $3 $4');
+     
+                        input.value = formattedValue.substring(0, 18); 
+                        }
+                    }
+
+                    function formatTelNumber(input) {
+                        // Remove non-numeric characters
+                        const numericValue = input.value.replace(/\D/g, '');
+
+                        // Check if the value is not empty
+                        if (numericValue.length > 0) {
+                        // Use a regular expression to add dashes (2 digits, then 3 digits)
+                        const formattedValue = numericValue.replace(/^(\d{3})(\d{4})?(\d{4})?/, '+($1) $2 $3');
+
+                        input.value = formattedValue.substring(0, 16); 
+                        }
+                    }
+
+                    
+
+                </script>
+
+            
+        </main>
+
+            <%- include('../partials/footer'); %>
+    </body>
+
+</html>

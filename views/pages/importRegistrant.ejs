@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('../partials/head') %>
+
+    </head>
+    <body >
+        <div class="second-nav">
+            <div class="nav2">
+                <h5> Events <span style="font-weight: 600;">></span> <span class="me-3"><a href="/about">Registrant Details</a></span><span style="font-weight: 600;">></span> <span><a href="/import-registrant">Import Registrant</a></span></h5>
+                <div style="display: flex">
+                    <div class="me-auto">
+                        <h1>Import Registrant</h1>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <header><%- include('../partials/header'); %></header>
+
+        <main class="container ">
+                <div class="cont" style="background-color: white; padding: 2%; border-radius: 10px;">
+                    <% if (error && error.length > 0) { %>
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <%= error %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <% } %>
+                    <div>
+                       <h4>Upload your CSV or Excel file <span class="required">*</span> </h4>
+                       <h5 style="font-size: 18px; font-weight: normal;">When importing the file please make sure to follow this <span ><a class="sample-file"href="assets/sample/Sample.csv" download="sample.csv">sample format</a></span>. Otherwise, the file will not be processed by the system.</h5>
+                    </div> 
+
+                    <div id="upload-container" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+
+                        <form action="/upload" method="post" enctype="multipart/form-data">
+                            <div class="file-input-container">
+                                <p>Please drop your file (.csv, .xlsx) <br> or click the icon to choose your file.</p>
+                                <label for="test" class="file-input-label"><i class="fas fa-cloud-upload-alt"></i></label> <br/>
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <p class="file-name" id="fileName">No file selected</p>
+                                    <button type="submit" id="uploadButton">Upload</button>
+                                </div>
+                                <input type="file" name="file" accept=".csv, .xlsx" id="test" onchange="updateFileNameAndShowButton(this)">
+                                
+                            </div>
+                            
+
+                        </form>
+
+                        
+
+                    </div>
+                </div> <!--- end cont -->
+                
+                
+            
+        </main>
+        <script>
+        function updateFileNameAndShowButton(input) {
+            const fileNameDisplay = document.getElementById('fileName');
+            fileNameDisplay.textContent = input.files[0] ? input.files[0].name : 'No file selected';
+
+            const uploadButton = document.getElementById('uploadButton');
+            uploadButton.style.display = 'inline-block';
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            const dropArea = document.getElementById('upload-container');
+            dropArea.classList.add('drag-over');
+        }
+
+        function handleDragLeave(event) {
+            event.preventDefault();
+            const dropArea = document.getElementById('upload-container');
+            dropArea.classList.remove('drag-over');
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            const dropArea = document.getElementById('upload-container');
+            dropArea.classList.remove('drag-over');
+
+            const files = event.dataTransfer.files;
+            const fileInput = document.getElementById('test');
+
+            fileInput.files = files;
+
+            updateFileNameAndShowButton(fileInput);
+        }
+        </script>
+          
+        
+        <%- include('../partials/footer'); %>
+    </body>
+</html>

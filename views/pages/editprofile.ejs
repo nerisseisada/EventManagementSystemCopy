@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+</head>
+<body>
+    <header>
+        <%- include('../partials/header_admin') %>
+    </header>
+    <div class="second-nav">
+        <div class="nav2">
+            <h5> Admin <span style="font-weight: 600;">></span> <span><a href="/admin">Edit Profile</a></span></h5>
+            <h1>Edit Profile</h1>
+        </div>
+
+    </div>
+    <main class="container">
+        <div class="cont">
+
+            <div class="pt-y">
+                <div >
+                    <% if (typeof updatemessage !== 'undefined' && updatemessage.length > 0) { %>
+                        <div class="alert alert-info alert-dismissible fade show">
+                            <%= updatemessage %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <% } %>
+                
+                    <!-- <div class="tab-content"> -->
+                        <div id="editprofile">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 >User Details</h3>
+                                </div>
+                                <div class="card-body">
+                                    <form id="userForm"  method="POST" action="/edit-profile/<%= user._id %>">
+                                        <div class="mb-3">
+                                            <label for="username" class="form-label">Username:</label>
+                                            <input type="text" class="form-control" name="username" id="username" value="<%= user.username %>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email:</label>
+                                            <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>">
+                                            <div id="email-error" class="text-danger">
+                                                <%= error %>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="currentpassword" class="form-label">Current Password:</label>
+                                            <input type="password" 
+                                                    class="form-control" 
+                                                    id="currentpassword" 
+                                                    name="currentpassword" 
+                                                    placeholder="Type your current password to change" 
+                                                    oninput="toggleNewPassword()"
+                                                    autocomplete="new-password"
+                                                    >
+                                            <% if (typeof incorrectpass !== 'undefined' && incorrectpass.length > 0) { %>
+                                                <p class="text-danger"><%= incorrectpass %></p>
+                                            <% } %>
+                                            <% if (typeof notmatch !== 'undefined' && notmatch.length > 0) { %>
+                                                <p class="text-danger"><%= notmatch %></p>
+                                            <% } %>
+                                        </div>
+                                        <div class="mb-3" id="newPasswordContainer" style="display:none;">
+                                            <label for="newpassword" class="form-label">New Password:</label>
+                                            <input minlength="5" placeholder="minimum of 5 characters" type="password" class="form-control" id="newpassword" name="newpassword">
+                                        </div>
+                                        <div class="mb-3" id="confirmPasswordContainer" style="display:none;">
+                                            <label for="confirmpassword" class="form-label">Confirm Password:</label>
+                                            <input type="password" class="form-control" id="confirmpassword" name="confirmpassword">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="role" class="form-label">Role:</label>
+                                            <select class="form-select" id="role" name="role">
+                                                <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                                                <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>User</option>
+                                            </select>
+                                        </div>                                    
+                                        <div class="mb-3">
+                                            <label for="dateCreated" class="form-label">Date Created:</label>
+                                            <input type="text" class="form-control" id="dateCreated" value="<%= user.timestamp %>" readonly>
+                                        </div>
+                                        <button type="submit" id="saveButton" class="btn btn-primary" disabled>Save Changes</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    <!-- </div> -->
+                </div>
+            </div>
+
+        </div>
+        
+    </main>
+    <script>
+
+
+// --------------------disable  button if there's no input change--------------------------------------------------------------------
+        function enableSaveButton() {
+            document.getElementById('saveButton').removeAttribute('disabled');
+        }
+        document.getElementById('userForm').addEventListener('input', enableSaveButton);
+// -----------------------show new password and confirm password if current password has input change 
+        function toggleNewPassword() {
+            var currentPassword = document.getElementById('currentpassword').value;
+            var newPasswordContainer = document.getElementById('newPasswordContainer');
+            var confirmPasswordContainer = document.getElementById('confirmPasswordContainer');
+
+            if (currentPassword.trim() !== '') {
+                newPasswordContainer.style.display = 'block';
+                confirmPasswordContainer.style.display = 'block';
+            } else {
+                newPasswordContainer.style.display = 'none';
+                confirmPasswordContainer.style.display = 'none';
+            }
+        }
+
+    </script>
+     
+    
+
+    <%- include('../partials/footer'); %>
+
+</body>
+</html>
